@@ -38,5 +38,8 @@ https://documenter.getpostman.com/view/42658721/2sB2j7dpr1
 ## Test Case
 https://docs.google.com/spreadsheets/d/1Xi0ZTGoS03QksHPtbUtvW7pKSzpTTn7uAyFv1R7BQzI/edit?usp=sharing
 
+### Allure Reports
+
+
 ## Author
 ### Shafkat Hasan
