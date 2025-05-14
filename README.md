@@ -39,6 +39,9 @@ https://documenter.getpostman.com/view/42658721/2sB2j7dpr1
 https://docs.google.com/spreadsheets/d/1Xi0ZTGoS03QksHPtbUtvW7pKSzpTTn7uAyFv1R7BQzI/edit?usp=sharing
 
 ### Allure Reports
+![20250514_231753_chrome](https://github.com/user-attachments/assets/935175c1-f31d-420c-bd8f-de7cde4d6b5b)
+![20250514_231603_chrome](https://github.com/user-attachments/assets/1f42da5f-c998-4e3a-b5a4-44061302c651)
+![20250514_231557_chrome](https://github.com/user-attachments/assets/205307cb-62dd-4bdd-ade0-05b400eb9bf5)
 
 
 ## Author
