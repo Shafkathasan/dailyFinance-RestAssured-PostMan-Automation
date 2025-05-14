@@ -19,7 +19,7 @@ import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
 
 public class UserTestRunner extends Setup {
-//    @Test(priority = 1, description = "Admin Login")
+    @Test(priority = 1, description = "Admin Login")
     public void adminLogin() throws ConfigurationException {
         UserController userController = new UserController(prop);
         UserModel userModel = new UserModel();
@@ -74,7 +74,7 @@ public class UserTestRunner extends Setup {
         Assert.assertEquals(res.getStatusCode(), 201);
     }
 
-//    @Test(priority = 3, description = "User List")
+    @Test(priority = 3, description = "User List")
     public void  userList(){
         UserController userController = new UserController(prop);
         Response res = userController.userList();
@@ -91,7 +91,7 @@ public class UserTestRunner extends Setup {
         assertThat("Response array should have more than 10 elements", users.size(), greaterThan(10));
     }
 
-//    @Test(priority = 4, description = "Search User by Id")
+    @Test(priority = 4, description = "Search User by Id")
     public void searchUser(){
         UserController userController = new UserController(prop);
         Response res = userController.searchUser(prop.getProperty("userId"));
@@ -151,7 +151,69 @@ public class UserTestRunner extends Setup {
         assertThat(lName, containsString("abc"));
     }
 
-//    @Test(priority = 6, description = "Delete User by Id")
+    @Test(priority = 6, description = "Admin Login with Invalid Credentials")
+    public void testAdminLoginWithInvalidCredentials() throws ConfigurationException {
+        UserController userController = new UserController(prop);
+        UserModel userModel = new UserModel();
+        userModel.setEmail("admin@test.com");
+        userModel.setPassword("wrong_password");
+        Response res = userController.userLogin(userModel);
+
+        Assert.assertEquals(res.getStatusCode(), 401);
+        //assertThat(res.jsonPath().getString("message"), containsString("Invalid credentials"));
+        System.out.println("Invalid credentials");
+    }
+
+    @Test(priority = 7, description = "Create User with Missing Required Fields")
+    public void testCreateUserWithMissingFields() {
+        UserController userController = new UserController(prop);
+        UserModel userModel = new UserModel(); // No fields set
+        Response res = userController.createUser(userModel);
+
+        Assert.assertEquals(res.getStatusCode(), 500);
+        Assert.assertTrue(res.asString().contains("Server error"));
+        System.out.println("User Cannot Login Without Filling Up Necessary Fields!");
+    }
+
+    @Test(priority = 8, description = "Get User List Without Authorization")
+    public void testGetUserListUnauthorized() {
+        // Save original token
+        String originalToken = prop.getProperty("token");
+
+        try {
+            prop.setProperty("token", "invalid_token");
+            UserController userController = new UserController(prop);
+            Response res = userController.userList();
+
+            Assert.assertEquals(res.getStatusCode(), 401);
+        } finally {
+            prop.setProperty("token", originalToken); // Restore token
+        }
+    }
+
+    @Test(priority = 9, description = "Search Non-Existent User")
+    public void testSearchInvalidUser() {
+        UserController userController = new UserController(prop);
+        Response res = userController.searchUser("invalid_user_id_123");
+
+        Assert.assertEquals(res.getStatusCode(), 404);
+        assertThat(res.jsonPath().getString("message"), containsString("not found"));
+    }
+
+    @Test(priority = 10, description = "Edit User with Invalid Data")
+    public void testEditUserWithInvalidData() {
+        UserController userController = new UserController(prop);
+        UserModel userModel = new UserModel();
+        userModel.setPhoneNumber("invalid_phone");
+        Response res = userController.editUser(userModel, prop.getProperty("userId"));
+
+        Assert.assertEquals(res.getStatusCode(), 500);
+        Assert.assertTrue(res.asString().contains("Server error"));
+        System.out.println("User Edit User Without Filling Up Necessary Fields!");
+    }
+
+
+    //    @Test(priority = 11, description = "Delete User by Id")
     public void deleteUser(){
         UserController userController = new UserController(prop);
         Response res = userController.deleteUser(prop.getProperty("userId"));
@@ -165,5 +227,6 @@ public class UserTestRunner extends Setup {
         assertThat(message, containsString("User deleted successfully"));
     }
 
+    // Add these methods to UserTestRunner class
 
 }
