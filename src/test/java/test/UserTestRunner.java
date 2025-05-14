@@ -5,6 +5,7 @@ import controller.UserController;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.apache.commons.configuration.ConfigurationException;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import setup.Setup;
 import setup.UserModel;
@@ -18,8 +19,8 @@ import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
 
 public class UserTestRunner extends Setup {
-//    @Test(priority = 1, description = "User Login")
-    public void userLogin() throws ConfigurationException {
+//    @Test(priority = 1, description = "Admin Login")
+    public void adminLogin() throws ConfigurationException {
         UserController userController = new UserController(prop);
         UserModel userModel = new UserModel();
         userModel.setEmail("admin@test.com");
@@ -30,9 +31,11 @@ public class UserTestRunner extends Setup {
         String token = jsonObj.get("token");
         System.out.println(token);
         Utils.setEnvVar("token",token);
+
+        Assert.assertEquals(res.getStatusCode(), 200);
     }
 
-//    @Test(priority = 2, description = "Create User")
+    @Test(priority = 2, description = "Create User")
     public void createUser() throws ConfigurationException {
         UserController userController = new UserController(prop);
         UserModel userModel = new UserModel();
@@ -53,17 +56,25 @@ public class UserTestRunner extends Setup {
         userModel.setPhoneNumber(phoneNumber);
         userModel.setAddress(address);
         userModel.setGender(gender);
-        userModel.setTermsAccepted(String.valueOf(termsAccepted));
+        userModel.setTermsAccepted(termsAccepted);
 
         Response res = userController.createUser(userModel);
         //System.out.println(res.asString());
+        System.out.println("User Info Before");
         JsonPath jsonObj = res.jsonPath();
         String id = jsonObj.get("_id");
         System.out.println(id);
         Utils.setEnvVar("userId",id);
+        //save user email
+        System.out.println(email);
+        Utils.setEnvVar("userEmail",email);
+        System.out.println(password);
+        Utils.setEnvVar("userPass",password);
+
+        Assert.assertEquals(res.getStatusCode(), 201);
     }
 
-    @Test(priority = 3, description = "User List")
+//    @Test(priority = 3, description = "User List")
     public void  userList(){
         UserController userController = new UserController(prop);
         Response res = userController.userList();
@@ -94,7 +105,53 @@ public class UserTestRunner extends Setup {
         assertThat(role, containsString("user"));
     }
 
-//    @Test(priority = 5, description = "Delete User by Id")
+    @Test(priority = 5, description = "Edit User with Admin")
+    public void editUser() throws ConfigurationException {
+        UserController userController = new UserController(prop);
+        UserModel userModel = new UserModel();
+        Faker faker = new Faker();
+        String firstName = "abc";
+        String lastName = "abc";
+        String email = "safuser"+Utils.generateRandomNumber(1000,9999)+"@test.com";
+        String password = "1234";
+        String phoneNumber = "0120"+Utils.generateRandomNumber(1000000,9999999);
+        String address = faker.address().streetAddress();
+        String gender = "Male";
+        boolean termsAccepted = true;
+
+        userModel.setFirstName(firstName);
+        userModel.setLastName(lastName);
+        userModel.setEmail(email);
+        userModel.setPassword(password);
+        userModel.setPhoneNumber(phoneNumber);
+        userModel.setAddress(address);
+        userModel.setGender(gender);
+        userModel.setTermsAccepted(termsAccepted);
+
+        Response res = userController.createUser(userModel);
+        //System.out.println(res.asString());
+        System.out.println("User Info Before");
+        JsonPath jsonObj = res.jsonPath();
+        String id = jsonObj.get("_id");
+        System.out.println(id);
+        Utils.setEnvVar("userId",id);
+        //save user email
+        System.out.println(email);
+        Utils.setEnvVar("userEmail",email);
+        System.out.println(password);
+        Utils.setEnvVar("userPass",password);
+
+        Assert.assertEquals(res.getStatusCode(), 201);
+
+        // Assert firstName and lastName contain "abc"
+        String fName = res.jsonPath().getString("firstName");
+        String lName = res.jsonPath().getString("lastName");
+
+        assertThat(fName, containsString("abc"));
+        assertThat(lName, containsString("abc"));
+    }
+
+//    @Test(priority = 6, description = "Delete User by Id")
     public void deleteUser(){
         UserController userController = new UserController(prop);
         Response res = userController.deleteUser(prop.getProperty("userId"));

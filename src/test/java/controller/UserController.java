@@ -43,6 +43,13 @@ public class UserController {
                 .when().get("/user/"+userId);
     }
 
+    public Response editUser(UserModel userModel, String userId){
+        RestAssured.baseURI= prop.getProperty("baseUrl");
+        return given().contentType("application/json").body(userModel)
+                .header("Authorization" ,"Bearer " +prop.getProperty("token"))
+                .when().put("/user/"+userId);
+    }
+
     public Response deleteUser(String userId){
         RestAssured.baseURI= prop.getProperty("baseUrl");
         return given().contentType("application/json").

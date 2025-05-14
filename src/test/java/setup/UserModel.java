@@ -8,7 +8,7 @@ public class UserModel {
     private String phoneNumber;
     private String address;
     private String gender;
-    private String termsAccepted;
+    private boolean termsAccepted;
 
     public String getFirstName() {
         return firstName;
@@ -50,11 +50,11 @@ public class UserModel {
         this.gender = gender;
     }
 
-    public String getTermsAccepted() {
+    public boolean  getTermsAccepted() {
         return termsAccepted;
     }
 
-    public void setTermsAccepted(String termsAccepted) {
+    public void setTermsAccepted(boolean  termsAccepted) {
         this.termsAccepted = termsAccepted;
     }
 
