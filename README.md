@@ -1,6 +1,7 @@
 # Daily Finance Api Automation
 ## Description: 
-### By Postman And Rest Assured
+#### This project contains automated API test cases written in Java using Rest Assured and follows the Page Object Model (POM) architecture. It is designed to validate key functionalities of the Daily Finance API, which manages users and cost items.
+### by Postman And Rest Assured
 
 ## Technologies Used
 
