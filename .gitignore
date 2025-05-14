@@ -45,3 +45,6 @@ bin/
 logs
 /allure-report/
 /allure-results/
+settings.gradle
+gradlew
+gradlew.bat
